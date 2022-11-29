@@ -1,0 +1,436 @@
+
+--1.1. Customers: Displays all customers that have purchased a vehicle. Include the Customer 
+--ID, First and Last Name, City, Vehicle Registration, Make, Model, Colour and Sales 
+--Purchase Total
+
+set serveroutput on;
+spool 'E:\assignment2customer1.1.csv'
+
+declare
+    cursor cus_cursor is
+        select a.c_id, a.c_fname, a.c_lname, a.c_address3, b.v_regno, b.v_make, b.v_model, c.c_colour, d.sp_total 
+        from customers a, vehicles b, lu_colours c, sales_purchases d
+        where a.c_id = d.c_id and d.v_regno = b.v_regno and b.c_no = c.c_no;
+        cus_row cus_cursor%rowtype;
+        rec_output varchar2(200);
+		nullexception EXCEPTION;
+begin
+    dbms_output.put_line ('CustomerID,' || 'CustomerFirstname,'||'CustomerLastname,'||'City,'||'Vehicle Registration,'||'Make,'||'Model,'||'Colour,'||'TotalPrice');
+for cus_row in cus_cursor loop
+    rec_output := cus_row.c_id||','||cus_row.c_fname||','||cus_row.c_lname||','||cus_row.c_address3||','||cus_row.v_regno||','||cus_row.v_make||','||cus_row.v_model||','||cus_row.c_colour||','||cus_row.sp_total;
+    dbms_output.put_line(rec_output);
+end loop;
+
+exception
+when nullexception then
+ DBMS_OUTPUT.PUT_LINE('please check your table, there exist null value');
+ when others then
+ DBMS_OUTPUT.PUT_LINE('sqlerrm');
+ 
+end;
+/
+
+--1.2. Purchase Sales: Displays all purchase sales of vehicles. Include the Invoice Number, Sale 
+--Purchase(这里指的是哪个字段啊), Customer details (ID, Name and Phone), Vehicle details (Rego, Year, Make and 
+--Model), Sales Person details (ID, Name and Supervisor ID)
+
+set serveroutput on;
+spool 'E:\assignment2purchansesales1.2.csv'
+
+declare
+
+	cursor pur_cursor is
+	select 
+	d.sp_invoice, 
+	a.c_id, a.c_fname||' '||a.c_lname "customername", a.c_ph, 
+	b.v_regno, b.v_year, b.v_make, b.v_model,
+	c.sp_id, c.sp_fname||' '||c.sp_lname "salesname", c.sp_sup
+	from customers a, vehicles b, sales_persons c, sales_purchases d
+	where a.c_id = d.c_id and c.sp_id = d.sp_id and d.v_regno = b.v_regno;
+
+	pur_row pur_cursor%rowtype;
+	rec_output varchar2(200);
+	nullexception EXCEPTION;
+begin
+    dbms_output.put_line ('Invoice,' || 'customerID,'||'customerName,'||'Regno,'||'Year,'||'Make,'||'Model,'||'SalesID,'||'SalesName,'||'SupervisorID');
+	for pur_row in pur_cursor loop
+    rec_output := pur_row.sp_invoice||','||pur_row.c_id||','||pur_row."customername"||','||pur_row.v_regno||','||pur_row.v_year||','||pur_row.v_make||','||pur_row.v_model||','||pur_row.sp_id||','||pur_row."salesname"||','||pur_row.sp_sup;
+    dbms_output.put_line(rec_output);
+end loop;
+
+exception
+when nullexception then
+ DBMS_OUTPUT.PUT_LINE('please check your table, there exist null value');
+ when others then
+ DBMS_OUTPUT.PUT_LINE('sqlerrm');
+ 
+end;
+/
+
+--2.1
+--Vehicles are available for ‘Sale’ and Micheal would like to find vehicles by make or 
+--model. The procedure names are SaleByMake() and SaleByModel() 
+- create procedures for both. Test your procedures with ‘Mazda’ and ‘Bluebird’
+
+
+CREATE OR REPLACE PROCEDURE SaleByMake(
+	make IN varchar2
+)
+IS
+    -- Step 1: Declare Cursor
+    CURSOR salebymake_cursor IS
+        SELECT * FROM vehicles
+		WHERE v_make = make;
+    -- Step 2: Declare ROW record pointer
+    make_row    salebymake_cursor%ROWTYPE;
+    rec_output  VARCHAR2(200); -- Output String 
+BEGIN   
+    -- Add Column Headers for CSV output
+    DBMS_OUTPUT.PUT_LINE('RegisterNumber,'||'Make,'||'Model,'||'Year,'||'Number Of Owners,'||'Price,'||'Miledge,'||'Colour Number');
+    -- Step 3: Fetch data from cursor into variables
+    FOR make_row IN salebymake_cursor LOOP
+            rec_output :=   make_row.v_regno || ',' ||
+                            make_row.v_make || ',' ||
+                            make_row.v_model || ',' ||
+                            make_row.v_year || ',' ||
+                            make_row.v_numowners|| ',' ||
+							make_row.v_price|| ',' ||
+							make_row.v_miledge|| ',' ||
+							make_row.c_no; -- Format output to CSV
+            DBMS_OUTPUT.PUT_LINE(rec_output);
+    END LOOP;
+END;
+/
+
+set serveroutput on;
+spool 'E:\assignment2SaleByMake2.1.csv'
+SET SERVEROUTPUT ON;
+execute SaleByMake('Mazda')
+
+
+
+CREATE OR REPLACE PROCEDURE SaleByModel(
+	model IN varchar2
+)
+
+IS
+	cursor salemodel_cursor is
+	select * from vehicles where v_model = model;
+	model_row salemodel_cursor%rowtype;
+    rec_output varchar2(200);
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('RegisterNumber,'||'Make,'||'Model,'||'Year,'||'Number Of Owners,'||'Price,'||'Miledge,'||'Colour Number');
+	for model_row in salemodel_cursor loop
+	rec_output := model_row.v_regno || ',' ||
+                            model_row.v_make || ',' ||
+                            model_row.v_model || ',' ||
+                            model_row.v_year || ',' ||
+                            model_row.v_numowners|| ',' ||
+							model_row.v_price|| ',' ||
+							model_row.v_miledge|| ',' ||
+							model_row.c_no;
+DBMS_OUTPUT.PUT_LINE(rec_output);
+end loop;
+end;
+/
+
+set serveroutput on;
+spool 'E:\assignment2SaleByModel2.1.csv'
+SET SERVEROUTPUT ON;
+execute SaleByModel('Bluebird')
+
+--2.2---没有运行成，要找sapna 试试--成功了
+--Performs purchase sales reports for a given year or purchase sales reports for a time 
+--period – a time period has a start date and an end date. Create a procedure that 
+--encompasses the report, the procedure name has SalesReport(). Test your procedure 
+--with time periods for the year 2015 and from the period of January of 2016 to June 
+--2016.
+
+
+CREATE OR REPLACE PROCEDURE SalesReport(
+	date1 IN date,
+	date2 IN date
+)
+
+IS
+	cursor salereport_cursor is
+	select * from sales_purchases where sp_datesold between  to_char(date1,'dd/mm/yyyy') and to_char(date2,'dd/mm/yyyy');
+	salereport_row salereport_cursor%rowtype;
+    rec_output varchar2(200);
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('Invoice,'||'DateSold,'||'SalesPrice,'||'AdditionalCost,'||'Deposit,'||'Total,'||'SalesPersonID,'||'CustomerID,'||'RegisterNumber');
+	for salereport_row in salereport_cursor loop
+	rec_output := salereport_row.sp_invoice || ','||
+	salereport_row.sp_datesold||','||
+	salereport_row.sp_saleprice||','||
+	salereport_row.sp_addncost||','||
+	salereport_row.sp_deposit||','||
+	salereport_row.sp_total||','||
+	salereport_row.sp_id||','||
+	salereport_row.c_id||','||
+	salereport_row.v_regno;
+DBMS_OUTPUT.PUT_LINE(rec_output);
+end loop;
+end;
+/
+
+set serveroutput on;
+spool 'E:\assignment2SalesReport2.2_1.csv'
+execute SalesReport(to_date('01/01/2015','dd/mm/yyyy'), to_date('31/12/2015','dd/mm/yyyy'))
+
+set serveroutput on;
+spool 'E:\assignment2SalesReport2.2_2.csv'
+execute SalesReport(to_date('01/01/2016','dd/mm/yyyy'), to_date('30/06/2016','dd/mm/yyyy'))
+
+
+--2.3
+--Create TWO procedures for searching customers details by a specific id and last 
+--name. Include the details of the customer including the total sale purchase total, the 
+--vehicle details, and the salesperson’s id who sold the vehicle. Test your procedures 
+--with customer id 14 and customer name ‘Avern’
+
+
+CREATE OR REPLACE PROCEDURE customersalereport(
+	id IN varchar2
+)
+IS
+	cursor customer_cursor is
+	select a.c_fname||' '||a.c_lname "customername", b.sp_total, b.v_regno, b.sp_id from customers a, sales_purchases b 
+	where a.c_id = id;
+	c customer_cursor%rowtype;
+    rec_output varchar2(200);
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('CustomerName,'||'Total,'||'RegisterNumber,'||'SalesPersonID');
+	for c in customer_cursor loop
+	rec_output := c."customername"||','||c.sp_total || ','||c.v_regno||','||c.sp_id;
+DBMS_OUTPUT.PUT_LINE(rec_output);
+end loop;
+end;
+/
+
+set serveroutput on;
+spool 'E:\assignment2customersalereport2.3_1.csv'
+SET SERVEROUTPUT ON;
+execute customersalereport(14)
+
+
+
+
+CREATE OR REPLACE PROCEDURE customernamesalereport(
+	lname IN varchar2
+)
+IS
+	cursor customer_cursor is
+	select a.c_fname||' '||a.c_lname "customername", b.sp_total, b.v_regno, b.sp_id from customers a, sales_purchases b 
+	where a.c_lname = lname;
+	c customer_cursor%rowtype;
+    rec_output varchar2(200);
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('CustomerName,'||'Total,'||'RegisterNumber,'||'SalesPersonID');
+	for c in customer_cursor loop
+	rec_output := c."customername"||','||c.sp_total || ','||c.v_regno||','||c.sp_id;
+DBMS_OUTPUT.PUT_LINE(rec_output);
+end loop;
+end;
+/
+
+set serveroutput on;
+spool 'E:\assignment2customernamesalereport2.3_2.csv'
+SET SERVEROUTPUT ON;
+execute customernamesalereport('Avern')
+
+--2.4
+--Performs payments for a specific time period – a time period has a start date and an 
+--end date. Create the required procedures. Test your procedure with period of the 
+--year 2015.
+
+
+CREATE OR REPLACE PROCEDURE paymentperiod(
+	date1 IN date,
+	date2 IN date
+)
+IS
+	cursor payment_cursor is
+	select * from payments where p_date between to_char(date1,'dd/mm/yyyy') and to_char(date2,'dd/mm/yyyy');
+	c payment_cursor%rowtype;
+    rec_output varchar2(200);
+	
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('Payment Invoice,'||'Payment Date,'||'Payment Amount,'||'Customer ID,'||'Sales Purchase Invoice');
+	for c in payment_cursor loop
+	rec_output := c.p_invoice || ','||c.p_date||','||c.p_amount||','||c.c_id||','||c.sp_invoice;
+DBMS_OUTPUT.PUT_LINE(rec_output);
+end loop;
+end;
+/
+
+SET SERVEROUTPUT ON;
+spool 'E:\assignment2paymentperiod2.4.csv'
+execute paymentperiod(to_date('01/01/2015','dd/mm/yyyy'), to_date('31/12/2015','dd/mm/yyyy'))
+
+
+--3.1
+--Create a function NumberOfDays() that calculates the number of days between two 
+--dates. The function accepts the start date and end date, then returns how many days 
+--it covers over that period.
+
+create or replace function NumberOfDays(date in date)
+return number
+is
+	days number;
+begin
+
+	days := TRUNC(sysdate - date);
+	return days;
+	
+exception
+when others then
+dbms_output.put_line(sqlerrm);
+
+end;
+/
+
+--3.2
+--Create a CSV procedure report that determines how many days since an order was 
+--made. Include the order id, order date, total qty, total and the number of days since 
+--it was ordered. Use the NumberOfDays() function to calculate the number of days 
+--since the order date and the current date. [5 Marks]
+
+set serveroutput on;
+spool 'E:\assignment2orderdays3.2.csv'
+
+Declare
+	Cursor orderdays_cursor is
+	select o_id,o_date,o_totalqty,o_total from orders;
+    c orderdays_cursor%rowtype;
+	rec_output varchar2(200);
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Order ID,'||'Order Date,'||'Total Qty,'||'Total,'||'Numbers of Days');
+	for c in orderdays_cursor loop
+	rec_output := c.o_id || ','||c.o_date||','||c.o_totalqty||','||c.o_total||','||NumberOfDays(c.o_date);
+    DBMS_OUTPUT.PUT_LINE(rec_output);
+end loop;
+end;
+/
+
+--4.1 Create a procedure called AddPurchaseSale() which inserts data into the Sales Purchases 
+--table.
+
+CREATE OR REPLACE PROCEDURE AddPurchaseSale
+(regno in varchar2,
+datesold in date,
+deposit in Number,
+spid in varchar2,
+cid in number
+)
+is
+begin
+	
+	INSERT INTO sales_purchases(sp_datesold, sp_saleprice, sp_deposit, sp_id, c_id, v_regno) 
+	SELECT to_date(datesold,'dd/mm/yyyy'), vehicles.v_price, deposit, spid, cid, regno FROM vehicles WHERE vehicles.v_regno = regno;
+	
+	UPDATE sales_purchases SET sp_addncost = sp_saleprice*0.2;
+	update sales_purchases set sp_total = sp_saleprice + sp_saleprice*0.2;
+	
+EXCEPTION
+	WHEN OTHERS THEN
+		ROLLBACK;
+end;
+/
+
+--testing script
+select * from sales_purchases;
+
+SET SERVEROUTPUT ON;
+execute AddPurchaseSale ('KER123',to_date('30/Aug/2016','dd/mm/yyyy'),4000, 'MK201',1)
+
+select * from sales_purchases;
+
+rollback work;
+
+select * from sales_purchases;
+
+--4.2 Create a procedure called AddPurchaseOrderItem() which performs similar data 
+--inserts to Order Lines. The procedure performs the following:
+
+
+CREATE OR REPLACE PROCEDURE AddPurchaseOrderItem
+( ordernumber in varchar2,
+qty in number,
+itemnumber in number)
+is
+begin
+	
+	insert into order_lines (o_id, i_no, i_make, i_model, i_price, i_year, ol_qty) 
+select ordernumber, items.i_no,items.i_make,items.i_model,items.i_price, items.i_year, qty from items
+where items.i_no = itemnumber;
+	
+	update Order_lines set ol_subtotal = ol_qty*i_price;
+	
+EXCEPTION
+	WHEN OTHERS THEN
+		ROLLBACK;
+end;
+/
+
+--testing procedure
+
+select * from orders;
+
+--create order
+INSERT INTO orders (o_date, s_code, sp_id) VALUES (TO_DATE('02/Jun/2017','dd/mm/yyyy'),'XTRQC','MK201');
+
+--select order number
+select max (o_id) from orders;
+
+SET SERVEROUTPUT ON;
+execute AddPurchaseOrderItem(80000010,12,19);
+
+select * from order_lines where o_id in (select max (o_id) from orders);
+
+select * from orders where o_id in (select max (o_id) from orders);
+
+rollback work;
+
+--5. Create the following business rules
+
+-- Create a row level trigger to demonstrate the different timings
+CREATE OR REPLACE TRIGGER supervisor_trg_approval
+BEFORE
+	INSERT OR
+	UPDATE ON sales_persons
+	
+FOR EACH ROW
+DECLARE
+
+pragma autonomous_transaction;
+num_supervisor number;
+
+BEGIN	
+	SELECT COUNT(sp_sup) INTO num_supervisor
+	FROM sales_persons
+	WHERE sp_sup = :NEW.sp_sup;
+
+	-- Enforce Business Rule
+	IF num_supervisor >= 2 THEN
+		RAISE_APPLICATION_ERROR(-20000,'INSERT DENIED: A supervisor can supervise no more than 2 people');
+	END IF;
+END supervisor_trg_approval;
+/
+ALTER TRIGGER supervisor_trg_approval ENABLE;	
+update sales_persons set sp_sup = 'MK201' where sp_id = 'BP301';
+
+ALTER TRIGGER supervisor_trg_approval ENABLE;	
+INSERT INTO sales_persons (sp_id, sp_fname, sp_lname, sp_startdate, sp_cellph, sp_comrate, sp_sup) 
+VALUES ('ST201', 'Sarah', 'Trigwell', '12-Jun-15', '0213390825', 0.25, 'MK201');
+
+
+
+
+
+
+
+
+
+
+

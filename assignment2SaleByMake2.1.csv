@@ -1,0 +1,12 @@
+RegisterNumber,Make,Model,Year,Number Of Owners,Price,Miledge,Colour Number
+GKN534,Mazda,626,2014,2,14599,59633,1
+OM1122,Mazda,323,2012,1,12995,89000,5
+RS3456,Mazda,323,2013,1,13995,110000,1
+OMG765,Mazda,323,2014,1,17995,59000,7
+PLKI21,Mazda,323,2014,1,16995,79000,2
+KER123,Mazda,Familia,2010,2,8995,85900,1
+PKR111,Mazda,Familia,2010,2,7995,95000,5
+
+
+PL/SQL procedure successfully completed.
+

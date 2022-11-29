@@ -1,0 +1,24 @@
+CustomerID,CustomerFirstname,CustomerLastname,City,Vehicle Registration,Make,Model,Colour,TotalPrice
+2,Peeta,Mallark,Hamilton,TGY683,Nissan,Navara,Red,62986.8
+8,Kermin,Shaldon,Hamilton,RS3456,Mazda,323,Red,13794
+1,Katniss,Everde,Hamilton,GKN534,Mazda,626,Red,15518.8
+15,John,Mack,Hamilton,LMV541,BMW,M3,Black,63488
+13,Toby,Deen,Hamilton,LQRT67,Toyota,Yaris,Black,22188
+2,Peeta,Mallark,Hamilton,ALP394,Nissan,Bluebird,Black,17194
+12,Tody,Ever,Cambridge,GBR553,Nissan,X-Trail,Silver,45994
+9,Sukki,Rightson,Hamilton,ZHU123,Nissan,Note,Silver,11994
+4,Haymitch,Avern,Cambridge,KGH334,Toyota,Rav4,Silver,42888
+6,Effie,Trinket,Hamilton,GLM123,Honda,Accord,White,11994
+7,Hamilon,Hardna,Hamilton,OM1122,Mazda,323,Blue,14094
+11,Frank,Smith,Hamilton,SUT143,Nissan,Bluebird,Purple,21594
+5,Primrose,Suzci,Cambridge,PHG902,Toyota,Rav4,Purple,56388
+4,Haymitch,Avern,Cambridge,OMG765,Mazda,323,Yellow,21594
+14,Pip,Jett,Hamilton,SALES1,BMW,525i,Yellow,29928
+3,Gale,Hawthorne,Hamilton,NT6776,Toyota,Corolla,Paua,24988
+3,Gale,Hawthorne,Hamilton,GTF098,Honda,Accord,Orange,13594
+1,Katniss,Everde,Hamilton,NIS123,Nissan,Pulsar,Orange,27986.8
+10,Mathew,Allen,Cambridge,PRH345,Honda,Accord,Orange,50262
+
+
+PL/SQL procedure successfully completed.
+

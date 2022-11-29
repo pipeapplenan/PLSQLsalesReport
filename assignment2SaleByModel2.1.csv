@@ -1,0 +1,10 @@
+RegisterNumber,Make,Model,Year,Number Of Owners,Price,Miledge,Colour Number
+ALP394,Nissan,Bluebird,2012,1,15995,59000,2
+SUT143,Nissan,Bluebird,2013,1,17995,61000,6
+LOL201,Nissan,Bluebird,2013,1,19995,41000,1
+HWY231,Nissan,Bluebird,2013,2,19995,39000,1
+TPGEAR,Nissan,Bluebird,2011,2,12995,89000,4
+
+
+PL/SQL procedure successfully completed.
+

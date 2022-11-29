@@ -1,0 +1,24 @@
+Invoice,customerID,customerName,Regno,Year,Make,Model,SalesID,SalesName,SupervisorID
+10000000,1,Katniss Everde,GKN534,2014,Mazda,626,MK201,Michael Knapp,
+10000001,2,Peeta Mallark,ALP394,2012,Nissan,Bluebird,MK201,Michael Knapp,
+10000002,3,Gale Hawthorne,NT6776,2015,Toyota,Corolla,MK201,Michael Knapp,
+10000003,4,Haymitch Avern,KGH334,2014,Toyota,Rav4,MK201,Michael Knapp,
+10000004,5,Primrose Suzci,PHG902,2016,Toyota,Rav4,KK634,Kelly Knapp,
+10000005,6,Effie Trinket,GLM123,2010,Honda,Accord,MK201,Michael Knapp,
+10000006,7,Hamilon Hardna,OM1122,2012,Mazda,323,KK634,Kelly Knapp,
+10000007,8,Kermin Shaldon,RS3456,2013,Mazda,323,KK634,Kelly Knapp,
+10000008,9,Sukki Rightson,ZHU123,2009,Nissan,Note,BP301,Bradley Palmer,MK201
+10000009,10,Mathew Allen,PRH345,2014,Honda,Accord,BP301,Bradley Palmer,MK201
+10000010,11,Frank Smith,SUT143,2013,Nissan,Bluebird,MK201,Michael Knapp,
+10000011,12,Tody Ever,GBR553,2016,Nissan,X-Trail,BP301,Bradley Palmer,MK201
+10000012,13,Toby Deen,LQRT67,2015,Toyota,Yaris,KC312,Karen Craften,KK634
+10000013,14,Pip Jett,SALES1,2009,BMW,525i,KC312,Karen Craften,KK634
+10000014,15,John Mack,LMV541,2010,BMW,M3,BP301,Bradley Palmer,MK201
+10000015,1,Katniss Everde,NIS123,2016,Nissan,Pulsar,KC312,Karen Craften,KK634
+10000016,2,Peeta Mallark,TGY683,2016,Nissan,Navara,KH981,Kane Hunter,MK201
+10000017,3,Gale Hawthorne,GTF098,2012,Honda,Accord,KK634,Kelly Knapp,
+10000018,4,Haymitch Avern,OMG765,2014,Mazda,323,KH981,Kane Hunter,MK201
+
+
+PL/SQL procedure successfully completed.
+
